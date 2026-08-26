@@ -1,0 +1,107 @@
+---
+title: "Ségrégation résidentielle à Marseille"
+subtitle: "Illustration produite pour le chapitre *Ségrégation spatiale* de l'ouvrage *Comprendre les migrations internationales*, CNRS Éditions, à paraître."
+author: "Louis Sirugue"
+lang: fr
+format: 
+  html:
+    embed-resources: true
+    toc: true
+    style: flatly
+editor_options: 
+  chunk_output_type: console
+---
+
+## Environnement logiciel
+
+```{r, message = F}
+# R version 4.5.3 "Reassured Reassurer"
+# RStudio 2026.05.0+218 "Golden Wattle" 
+# Quarto 1.9.36 
+
+library(data.table) # Version 1.18.2.1
+library(tidyverse)  # Version 2.0.0
+library(scales)     # Version 1.4.0
+library(sf)         # Version 1.1.0
+```
+
+## Préparation des données
+
+::: {.panel-tabset}
+
+### Données de recensement
+
+```{r}
+rp <- fread("src/FD_LOGEMTZE_2022.csv", colClasses = "character", 
+            select = c("COMMUNE", "ARM", "IRIS", "IMMIM")) %>% 
+  .[COMMUNE == "13055"] # Conserver seulement Marseille
+```
+
+::: {.callout-note}
+# Source
+
+[INSEE -- Populations de référence 2022](https://www.insee.fr/fr/statistiques/8290591){target="_blank"}
+:::
+
+### Fonds de carte IRIS
+
+```{r}
+iris <- read_sf("src/CONTOURS-IRIS.shp") %>% 
+  filter(INSEE_COM %in% rp$ARM) # Conserver seulement Marseille
+
+# Re-projection en Lambert 93 (https://epsg.io/2154)
+iris <- st_transform(iris, crs = st_crs("EPSG:2154"))
+```
+
+::: {.callout-note}
+# Source
+
+[IGN – Admin Express – France 2022](https://cartes.gouv.fr/rechercher-une-donnee/dataset/IGNF_ADMIN-EXPRESS){target="_blank"}
+:::
+
+:::
+
+```{r, results = 'hide'}
+gc() # Nettoyage de la mémoire
+```
+
+## Statistiques de zone
+
+```{r}
+pct_iris <- rp %>% 
+  # Résidences principales uniquement
+  . [IMMIM != "Y"] %>% 
+  # % de ménages dont la personne de référence est immigrée, par IRIS
+  .[, .(pct = mean(IMMIM == "1")), by = IRIS]
+
+# Appariement au fond de carte
+dt <- left_join(iris, pct_iris, by = join_by("CODE_IRIS" == "IRIS")) 
+
+# Contours des arrondissements
+arr <- summarise(dt, geometry = st_union(geometry), .by = INSEE_COM)
+```
+
+## Cartographie
+
+```{r} 
+ggplot(dt, aes(fill = pct)) +
+  # IRIS
+  geom_sf(color = alpha("white", .15), linewidth = .1) +
+  # Arrondissements
+  geom_sf(data = arr, inherit.aes = F, fill = "transparent", color = alpha("white", .33)) +
+  # Gradient en nuances de gris
+  scale_fill_gradient(name = "Proportion d'immigrés", low = "black", high = "white", 
+                      space = "Lab", na.value = "transparent", breaks = seq(0, .7, .1), 
+                      labels = scales::label_percent()) +
+  # Fond de graphique vide et taille du texte
+  theme_void(base_size = 11) +
+  # Format de la légende
+  guides(fill = guide_colorbar(barwidth = 20, barheight = 0.5, title.position = "top")) +
+  theme(legend.direction = "horizontal", legend.position = "bottom", 
+        legend.title = element_text(hjust = .5))
+
+# Export
+for (x in c("tif", "jpeg", "png")) {
+  ggsave(paste0("out/marseille.", x), width = 4.5, height = 4.5, dpi = 300)
+}
+```
