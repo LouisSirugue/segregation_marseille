@@ -1,16 +1,28 @@
 # Ségrégation résidentielle à Marseille
 
-Ce repo contient les fichiers nécéssaires à la reproduction de la carte de la ségrégation résidentielle à Marseille illustrant le chapitre sur la ségrégation spatiale de l'ouvrage collectif sur les migrations de l'ICM.
+Ce repo contient les fichiers nécéssaires à la reproduction de l'llustration produite pour le chapitre *Ségrégation spatiale* de l'ouvrage *Comprendre les migrations internationales*, CNRS Éditions, à paraître.
 
-## Versions
+## Environnement logiciel 
 
- - R version 4.5.3
- - RStudio 2026.04.0
- - data.table 1.18.2.1
- - tidyverse 2.0.0
- - sf 1.1.0
+- R version 4.5.3 "Reassured Reassurer"
+- RStudio 2026.05.0+218 "Golden Wattle" 
+- Quarto 1.9.36 
+- Packages : data.table 1.18.2.1, tidyverse 2.0.0, scales 1.4.0, sf 1.1.0.
 
-## Sources
+## Bases de données à télécharger
+ - [Insee – Fichier détail – Recensement de la population 2022](https://www.insee.fr/fr/statistiques/8647099) ([Fichier régional Zone E](https://www.insee.fr/fr/statistiques/fichier/8647099/RP2022_logemtze.zip))
+ - [IGN – Admin Express – France 2022](https://cartes.gouv.fr/rechercher-une-donnee/dataset/IGNF_ADMIN-EXPRESS) (Fichiers CONTOURS-IRIS)
 
- - [Insee – Fichier détail – Recensement de la population 2022](https://www.insee.fr/fr/statistiques/8647099?sommaire=8590191)
- - [IGN – Admin Express – France 2022](https://cartes.gouv.fr/rechercher-une-donnee/dataset/IGNF_ADMIN-EXPRESS)
+## Structure 
+
+```
+├── code.qmd
+├── out/
+└── src/
+    ├── CONTOURS-IRIS.cpg
+    ├── CONTOURS-IRIS.dbf
+    ├── CONTOURS-IRIS.prj
+    ├── CONTOURS-IRIS.shp
+    ├── CONTOURS-IRIS.shx
+    └── FD_LOGEMTZE_2022.csv
+```
