@@ -26,3 +26,7 @@ Ce repo contient les fichiers nécéssaires à la reproduction de l'llustration 
     ├── CONTOURS-IRIS.shx
     └── FD_LOGEMTZE_2022.csv
 ```
+
+## Résultat
+
+![segregation_marseille](out/marseille.png)
