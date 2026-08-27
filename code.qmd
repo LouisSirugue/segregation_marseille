@@ -7,7 +7,7 @@ format:
   html:
     embed-resources: true
     toc: true
-    theme: flatly
+    theme: cosmo
 editor_options: 
   chunk_output_type: console
 ---
@@ -101,7 +101,7 @@ ggplot(dt, aes(fill = pct)) +
         legend.title = element_text(hjust = .5))
 
 # Export
-for (x in c("tif", "jpeg", "png")) {
+for (x in c("tif", "jpeg", "png", "pdf")) {
   ggsave(paste0("out/marseille.", x), width = 4.5, height = 4.5, dpi = 300)
 }
 ```
