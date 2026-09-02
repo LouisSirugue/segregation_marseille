@@ -1,6 +1,6 @@
 # Ségrégation résidentielle à Marseille
 
-Ce repo contient les fichiers nécéssaires à la reproduction de l'llustration produite pour le chapitre *Ségrégation spatiale* de l'ouvrage *Comprendre les migrations internationales*, CNRS Éditions, à paraître.
+Ce repo contient les fichiers nécéssaires à la reproduction de l'illustration produite pour le chapitre *Ségrégation spatiale* de l'ouvrage *Comprendre les migrations internationales*, CNRS Éditions, à paraître.
 
 ## Environnement logiciel 
 
